@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build2') {
+            steps {
+               echo 'Build'
+               sh 'sleep 10'
+            }
+        }
+        stage('Test2') {
+            steps {
+               echo 'Test'
+               sh 'sleep 10'
+            }
+        }
+        stage('Deploy2') {
+            steps {
+               echo 'Deploy'
+               sh 'sleep 10'
+            }
+        }
+    }
+}
