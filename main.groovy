@@ -1,7 +1,8 @@
 import hudson.FilePath
 
 // Build a list of all config files ending in .jenkinsfile
-def files = new FilePath(build.workspace.channel, pwd()).list('*.jenkinsfile')
+def workspace = hudson.model.Executor.currentExecutor().getCurrentWorkspace()
+def files = workspace.list('*.jenkinsfile')
 
 files.each { file ->
     pipelineJob(file.getBaseName()) {
