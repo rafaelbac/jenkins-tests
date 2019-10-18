@@ -1,10 +1,14 @@
-def  files = ['test1.jenkinsfile', 'test2.jenkinsfile']
+import hudson.FilePath
+
+// Build a list of all config files ending in .jenkinsfile
+def cwd = hudson.model.Executor.currentExecutor().getCurrentWorkspace().absolutize()
+def files = new FilePath(cwd).list('*.jenkinsfile')
 
 files.each { file ->
-    pipelineJob(file.replace('.jenkinsfile', '')) {
+    pipelineJob(file.getBaseName()) {
         definition {
             cps {
-                script(readFileFromWorkspace(file).stripIndent())
+                script(file.readToString().stripIndent())
                 sandbox()
             }
         }
