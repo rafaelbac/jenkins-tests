@@ -1,10 +1,11 @@
-def files = findFiles(glob: '*.jenkinsfile')
+def  files = sh (script: "ls *.jenkinsfile", returnStdout: true).trim().split( "\\r?\\n" )
 
 files.each { file ->
     pipelineJob(file.getName()) {
         definition {
             cps {
-            script(readFileFromWorkspace(file).stripIndent())
+                script(readFileFromWorkspace(file).stripIndent())
+                sandbox()
             }
         }
     }
