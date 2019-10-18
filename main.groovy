@@ -1,4 +1,4 @@
-def  files = sh (script: "ls *.jenkinsfile", returnStdout: true).trim().split( "\\r?\\n" )
+def  files = ['test1.jenkinsfile', 'test2.jenkinsfile']
 
 files.each { file ->
     pipelineJob(file.getName()) {
