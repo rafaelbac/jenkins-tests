@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Cloning Git repository') {
+            steps {
+                git 'https://github.com/rafaelbac/cypress-react-tutorial.git'
+            }
+        }
+        stage('Install project dependencies') {
+            steps {
+                container('jenkins-slave') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Start local server') {
+            steps {
+                container('jenkins-slave') {
+                    // start local server in the background
+                    // we will shut it down in "post" command block
+                    sh 'nohup npm start &'
+                }
+            }
+        }
+        stage('Run tests') {
+            steps {
+                container('jenkins-slave') {
+                    sh 'npx cypress run'
+                }
+            }
+        }
+    }
+    post {
+        // shutdown the server running in the background
+        always {
+            container('jenkins-slave') {
+                echo 'Stopping local server'
+                sh 'pgrep node | xargs kill'
+            }
+        }
+    }
+}
